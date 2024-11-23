@@ -1,6 +1,7 @@
 @extends('layouts.main')
 @section('title', 'Category List')
 @section('content')
+    <p class="fs-3">Category List</p>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item active" aria-current="page">Category List</li>
@@ -26,9 +27,6 @@
                     <td class="text-center">
                         <a href="/category/edit/{{ $data->id }}" class="btn btn-outline-warning btn-sm"><i
                                 class="fas fa-pencil"></i>
-                        </a>
-                        <a href="/category/show/{{ $data->id }}" class="btn btn-outline-primary btn-sm">
-                            <i class="fas fa-eye"></i>
                         </a>
                         <form action="/category/{{ $data->id }}" method="post" class="d-inline">
                             @method('delete')

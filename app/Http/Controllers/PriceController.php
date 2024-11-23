@@ -26,7 +26,7 @@ class PriceController extends Controller
      */
     public function create()
     {
-        $getProduct = Product::all();
+        $getProduct = Product::whereDoesntHave('productPrices')->get();
         return view('price.create', [
             'getProduct' => $getProduct,
         ]);
@@ -100,8 +100,18 @@ class PriceController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Price $price)
+    public function destroy(Request $request)
     {
-        //
+        DB::beginTransaction();
+        try {
+            Price::destroy($request->id);
+            DB::commit();
+            session()->flash('success', 'Price deleted successfully.');
+            return redirect('price');
+        } catch (Exception $e) {
+            DB::rollBack();
+            session()->flash('error', $e);
+            return redirect('price');
+        }
     }
 }

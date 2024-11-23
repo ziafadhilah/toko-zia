@@ -1,4 +1,5 @@
 @extends('layouts.main')
+@section('title', 'Thumbnail Edit')
 @section('content')
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">

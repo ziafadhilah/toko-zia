@@ -26,7 +26,7 @@ class ThumbnailController extends Controller
      */
     public function create()
     {
-        $getProduct = Product::all();
+        $getProduct = Product::whereDoesntHave('productThumbnail')->get();
         return view('thumbnail.create', [
             'getProduct' => $getProduct,
         ]);
@@ -108,6 +108,8 @@ class ThumbnailController extends Controller
             DB::rollBack();
             session()->flash('error', 'Failed to update thumbnail.');
         }
+
+        return redirect('thumbnail');
     }
 
     /**

@@ -1,4 +1,5 @@
 @extends('layouts.main')
+@section('title', 'Create Thumbnail')
 @section('content')
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -12,13 +13,16 @@
         <div class="card bg-dark col-lg-8 col-md-8">
             <div class="card-body">
                 <div class="mb-3">
-                    <label for="product_id" class="form-label text-white">Product</label>
-                    <select class="form-select form-select-md" aria-label=".form-select-md example" name="product_id">
-                        <option selected class="text-center">-- Choose Product --</option>
-                        @foreach ($getProduct as $data)
-                            <option value="{{ $data->id }}">{{ $data->name ?? '-' }}</option>
-                        @endforeach
-                    </select>
+                    @if ($getProduct->isEmpty())
+                        <div class="text-white text-center">There are no products that can be added the thumbnail.</div>
+                    @else
+                        <label for="product_id" class="form-label text-white">Product</label>
+                        <select class="form-select form-select-md" aria-label=".form-select-md example" name="product_id">
+                            <option selected class="text-center">-- Choose Product --</option>
+                            @foreach ($getProduct as $data)
+                                <option value="{{ $data->id }}">{{ $data->name ?? '-' }}</option>
+                            @endforeach
+                        </select>
                 </div>
                 <div class="mb-3">
                     <label for="thumbnail_code" class="form-label text-white">Thumbnail Code</label>
@@ -30,6 +34,7 @@
                     <input type="file" name="thumbnail" class="form-control" id="thumbnail">
                 </div>
                 <button type="submit" class="btn btn-primary">Save</button>
+                @endif
             </div>
         </div>
     </form>

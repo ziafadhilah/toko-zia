@@ -15,7 +15,7 @@
             <div class="card-body">
                 <div class="mb-3">
                     <label for="category_code" class="form-label text-white">Category Code</label>
-                    <input type="number" class="form-control" name="category_code" id="category_code"
+                    <input type="text" class="form-control" name="category_code" id="category_code"
                         value="{{ $category->category_code }}">
                 </div>
                 <div class="mb-3">

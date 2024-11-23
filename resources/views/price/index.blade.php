@@ -1,6 +1,7 @@
 @extends('layouts.main')
 @section('title', 'Price List')
 @section('content')
+    <p class="fs-3">Price List</p>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item active" aria-current="page">Price List</li>
@@ -21,14 +22,13 @@
             @foreach ($price as $data)
                 <tr>
                     <th class="text-center">{{ $loop->iteration }}</th>
-                    <td class="text-center">{{ $data->product->name }}</td>
-                    <td class="text-center">{{ $data->price }}</td>
+                    <td class="text-center {{ is_null($data->product) ? 'text-danger' : '' }}">
+                        {{ $data->product->name ?? 'No items linked to this price.' }}
+                    </td>
+                    <td class="text-center">Rp. {{ number_format($data->price, 2, ',', '.') }}</td>
                     <td class="text-center">
                         <a href="/price/edit/{{ $data->id }}" class="btn btn-outline-warning btn-sm"><i
                                 class="fas fa-pencil"></i>
-                        </a>
-                        <a href="/price/show/{{ $data->id }}" class="btn btn-outline-primary btn-sm">
-                            <i class="fas fa-eye"></i>
                         </a>
                         <form action="/price/{{ $data->id }}" method="post" class="d-inline">
                             @method('delete')

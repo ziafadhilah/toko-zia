@@ -1,6 +1,7 @@
 @extends('layouts.main')
 @section('title', 'Thumbnail List')
 @section('content')
+    <p class="fs-3">Thumbnail List</p>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item active" aria-current="page">Thumbnail List</li>

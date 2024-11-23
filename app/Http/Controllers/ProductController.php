@@ -7,6 +7,7 @@ use App\Models\Product;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -68,7 +69,7 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::with('productCategory', 'productThumbnail', 'productPrices')->findOrFail($id);
         return view('product.show', [
             'product' => $product,
         ]);
@@ -92,6 +93,13 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'category_id' => 'required',
+            'name' => 'required',
+            'stock' => 'required|integer|min:0',
+            'price' => 'required|numeric|min:0',
+        ]);
+
         DB::beginTransaction();
         try {
             $product = Product::findOrFail($id);
@@ -116,10 +124,11 @@ class ProductController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
             return redirect('/product')->with([
-                'error' => $e,
+                'error' => $e->getMessage(),
             ]);
         }
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -128,14 +137,26 @@ class ProductController extends Controller
     {
         DB::beginTransaction();
         try {
-            Product::destroy($request->id);
+            // Find the product by ID
+            $product = Product::findOrFail($request->id);
+            // Delete the product thumbnail if it exists
+            if ($product->productThumbnail) {
+                // Delete the thumbnail from storage
+                $thumbnailPath = $product->productThumbnail->thumbnail;
+                if (Storage::exists($thumbnailPath)) {
+                    Storage::delete($thumbnailPath);
+                }
+                // Delete the thumbnail record from the database
+                $product->productThumbnail()->delete();
+            }
+            // Delete the product itself
+            $product->delete();
             DB::commit();
             session()->flash('success', 'Product deleted successfully.');
-            return redirect('product');
         } catch (Exception $e) {
             DB::rollBack();
-            session()->flash('error', $e);
-            return redirect('product');
+            session()->flash('error', $e->getMessage());
         }
+        return redirect('product');
     }
 }

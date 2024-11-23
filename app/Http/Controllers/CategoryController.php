@@ -41,12 +41,11 @@ class CategoryController extends Controller
             $category->save();
             DB::commit();
             session()->flash('success', 'Category saved successfully.');
-            return redirect('category');
         } catch (Exception $e) {
             DB::rollBack();
             session()->flash('error', $e);
-            return redirect('category');
         }
+        return redirect('category');
     }
 
     /**
@@ -82,12 +81,11 @@ class CategoryController extends Controller
             $category->save();
             DB::commit();
             session()->flash('success', 'Category updated successfully.');
-            return redirect('category');
         } catch (Exception $e) {
             DB::rollBack();
             session()->flash('error', $e);
-            return redirect('category');
         }
+        return redirect('category');
     }
 
     /**
@@ -104,7 +102,6 @@ class CategoryController extends Controller
             DB::rollBack();
             session()->flash('error', $e);
         }
-
         return redirect('category');
     }
 }

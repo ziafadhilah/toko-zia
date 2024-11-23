@@ -16,9 +16,12 @@
                 <div class="mb-3">
                     <label for="category_id" class="form-label text-white">Category</label>
                     <select class="form-select form-select-md" aria-label=".form-select-md example" name="category_id">
+                        <option class="text-center" value="" disabled
+                            {{ $product->productCategory ? '' : 'selected' }}>-- Pilih Kategori
+                            --</option>
                         @foreach ($productCategories as $productCategory)
                             <option class="text-center"
-                                {{ $product->productCategory->id == $productCategory->id ? 'selected' : '' }}
+                                {{ optional($product->productCategory)->id == $productCategory->id ? 'selected' : '' }}
                                 value="{{ $productCategory->id }}">
                                 {{ $productCategory->name }}
                             </option>
@@ -35,11 +38,37 @@
                 </div>
                 <div class="mb-3">
                     <label for="price" class="form-label text-white">Price</label>
-                    <input type="number" class="form-control" name="price" id="price"
-                        value="{{ $product->productPrices->price }}">
+                    <input type="text" class="form-control" name="price" id="price"
+                        value="{{ isset($product->productPrices->price) ? number_format($product->productPrices->price, 0, ',', '.') : '0' }}">
                 </div>
                 <button type="submit" class="btn btn-primary">Save</button>
             </div>
         </div>
     </form>
+@endsection
+@section('pagescript')
+    <script>
+        const priceInput = document.getElementById('price');
+
+        // Tambahkan format awal (Rp. 0 jika kosong)
+        if (!priceInput.value.trim() || priceInput.value === '0') {
+            priceInput.value = 'Rp. 0';
+        }
+
+        // Format angka dengan pemisah ribuan dan prefiks "Rp." saat pengguna mengetik
+        priceInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/[^\d]/g, ''); // Hilangkan karakter non-angka
+            if (!value) {
+                e.target.value = 'Rp. 0'; // Default Rp. 0 jika kosong
+                return;
+            }
+            e.target.value = 'Rp. ' + new Intl.NumberFormat('id-ID').format(value);
+        });
+
+        // Menghapus prefiks "Rp." sebelum mengirim data ke backend
+        const form = priceInput.closest('form');
+        form.addEventListener('submit', function() {
+            priceInput.value = priceInput.value.replace(/[^0-9]/g, ''); // Hanya angka yang dikirim
+        });
+    </script>
 @endsection
